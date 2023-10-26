@@ -1,0 +1,19 @@
+#cloud-config
+packages:
+  - "wget"
+  - "bash-completion"
+  - "git"
+
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+write_files:
+  - path: "/root/hello.txt"
+    owner: "root:root"
+    permissions: '0644'
+    content: "This Infrastructure is provided by BZHack! Enjoy!\n"
+runcmd:
+  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/instance_keys
+  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/id_rsa.pub
+  - scw-fetch-ssh-keys --upgrade
