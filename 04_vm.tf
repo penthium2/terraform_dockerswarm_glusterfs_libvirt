@@ -3,7 +3,7 @@ resource "libvirt_volume" "dynamic" {
   name   = "vm${count.index}.qcow2"
   format = "qcow2"
   pool   = libvirt_pool.terraform.name
-  source = "/home/penthium2/vm/terraform/Fedora-Cloud-Base-38-1.6.x86_64.qcow2"
+  source = "/home/penthium2/vm/Fedora-Cloud-Base-38-1.6.x86_64.qcow2"
 }
 resource "libvirt_domain" "dynamic" {
   count  = var.number_vm
