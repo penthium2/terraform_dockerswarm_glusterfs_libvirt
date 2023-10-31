@@ -2,6 +2,5 @@
 .terraform*
 /pool
 /private_key.pem
-/base
 /test
 terraform*
