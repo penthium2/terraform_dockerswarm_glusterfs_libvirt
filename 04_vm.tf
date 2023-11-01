@@ -11,7 +11,7 @@ resource "libvirt_volume" "final_dynamic" {
   name   = "vm${count.index}.qcow2"
   pool   = libvirt_pool.terraform.name
   base_volume_id = libvirt_volume.dynamic[count.index].id
-  size            = 10737418240
+  size            = var.size
 }
 data "template_file" "cloudinit" {
   template = file("${path.module}/cloud-init.yml")
@@ -45,7 +45,7 @@ resource "libvirt_domain" "dynamic" {
     wait_for_lease= true
   }
   disk {
-    volume_id = libvirt_volume.dynamic[count.index].id 
+    volume_id = libvirt_volume.final_dynamic[count.index].id 
   }
   cloudinit = libvirt_cloudinit_disk.commoninit.id
     console {

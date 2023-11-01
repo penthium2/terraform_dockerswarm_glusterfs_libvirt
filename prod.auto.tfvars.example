@@ -1,0 +1,6 @@
+number_vm = 1
+path_pool = "/home/penthium2/vm/terraform/pool"
+path_img = "/home/penthium2/vm"
+vm_image =  "Fedora-Cloud-Base-38-1.6.x86_64.qcow2"
+size = 15032385536
+

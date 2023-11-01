@@ -4,3 +4,4 @@
 /private_key.pem
 /test
 terraform*
+prod.auto.tfvars
