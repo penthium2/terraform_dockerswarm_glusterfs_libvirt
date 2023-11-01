@@ -37,8 +37,8 @@ resource "libvirt_cloudinit_disk" "commoninit" {
 resource "libvirt_domain" "dynamic" {
   count  = var.number_vm
   name   = "vm${count.index}"
-  memory = "2028"
-  vcpu   = 1
+  memory = "4096"
+  vcpu   = 2
   network_interface {
     network_name = "default"
     #permet d'attendre la couche réseau pour avoir les ips dans output :
@@ -63,6 +63,7 @@ resource "libvirt_domain" "dynamic" {
       type     = "ssh"
       user     = "root"
       private_key = tls_private_key.terrafrom_generated_private_key.private_key_openssh
+      timeout = "15m"
     }
   }
 }

@@ -1,11 +1,11 @@
 #cloud-config
-#packages:
-#  - "bash-completion"
-#  - "git"
+packages:
+  - "bash-completion"
+  - "git"
 
-#package_update: true
-#package_upgrade: true
-#package_reboot_if_required: true
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
 
 write_files:
   - path: "/root/hello.txt"
