@@ -1,6 +1,9 @@
-number_vm = 1
+number_vm = 3
 path_pool = "/home/penthium2/vm/terraform/pool"
 path_img = "/home/penthium2/vm"
 vm_image =  "Fedora-Cloud-Base-38-1.6.x86_64.qcow2"
+ram     = 4096
+vcpu = 4
 size = 15032385536
+timeout_ssh = "15m"
 
