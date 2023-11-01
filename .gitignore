@@ -5,3 +5,5 @@
 /test
 terraform*
 prod.auto.tfvars
+terraform.tfstate
+terraform.tfstate.backup
