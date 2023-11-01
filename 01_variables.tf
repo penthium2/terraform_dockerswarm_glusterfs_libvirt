@@ -15,8 +15,13 @@ variable "path_img" {
 }
 variable "vm_image" {
   type        = string
-  description = "VM image to use for deployment - valid = centos_stream_8, centos_stream_9, debian_bookworm, debian_bulleyes"
+  description = "le n om de la image source cf variable var.path_img"
   default     = "Fedora-Cloud-Base-38-1.6.x86_64.qcow2"
+}
+variable "name_vm" {
+  type        = string
+  description = "nom de la vm"
+  default     = "vm"
 }
 variable "ram" {
   type        = string

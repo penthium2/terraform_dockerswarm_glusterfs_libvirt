@@ -1,18 +1,21 @@
-###### VM :
+###### création du volume disque en 2 étapes :
 resource "libvirt_volume" "dynamic" {
   count  = var.number_vm
-  name   = "vm${count.index}"
+  name   = "${var.name_vm}${count.index}"
   format = "qcow2"
   pool   = libvirt_pool.terraform.name
   source = "${var.path_img}/${var.vm_image}"
 }
+## resize de l'miage original :
 resource "libvirt_volume" "final_dynamic" {
   count  = var.number_vm
-  name   = "vm${count.index}.qcow2"
+  name   = "${var.name_vm}${count.index}.qcow2"
   pool   = libvirt_pool.terraform.name
   base_volume_id = libvirt_volume.dynamic[count.index].id
   size            = var.size
 }
+
+###### gestion du cloud init : 
 data "template_file" "cloudinit" {
   template = file("${path.module}/cloud-init.yml")
   vars = {
@@ -34,6 +37,7 @@ resource "libvirt_cloudinit_disk" "commoninit" {
   pool           =  libvirt_pool.terraform.name
   user_data      = data.cloudinit_config.conf.rendered
 }
+###### Création des VMs :
 resource "libvirt_domain" "dynamic" {
   count  = var.number_vm
   name   = "vm${count.index}"
@@ -53,6 +57,7 @@ resource "libvirt_domain" "dynamic" {
     target_type = "serial"
     target_port = "0"
   }
+  ## cette partie permet d'attendre la fin du cloudinit avant la suite ( pensé au depend_on après).
   provisioner "remote-exec" {
     inline = [
       "cloud-init status --wait",

@@ -2,17 +2,23 @@
 packages:
   - "bash-completion"
   - "git"
-
+  - "curl"
+  - "firewalld"
 package_update: true
 package_upgrade: true
 package_reboot_if_required: true
-
+runcmd:
+  - loadkeys fr
+  - systemctl enable firewalld --now
+  - curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+  - chmod u+x /tmp/get-docker.sh
+  - /tmp/get-docker.sh
+  - systemctl enable docker --now
+  - firewall-cmd --set-default-zone=trusted
+  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/authorized_keys
+  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/id_rsa.pub
 write_files:
   - path: "/root/hello.txt"
     owner: "root:root"
     permissions: '0644'
     content: "This Infrastructure is provided by BZHack! Enjoy!\n"
-runcmd:
-  - loadkeys fr
-  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/authorized_keys
-  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/id_rsa.pub
