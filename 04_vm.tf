@@ -18,7 +18,7 @@ resource "libvirt_volume" "final_dynamic" {
 ###### gestion du cloud init : 
 data "template_file" "cloudinit" {
   template = file("${path.module}/cloud-init.yml")
-  vars = {
+    vars = {
     root_sshkey    = trimspace(tls_private_key.terrafrom_generated_private_key.public_key_openssh)
     private_sshkey = tls_private_key.terrafrom_generated_private_key.private_key_openssh
   }
@@ -40,11 +40,12 @@ resource "libvirt_cloudinit_disk" "commoninit" {
 ###### Création des VMs :
 resource "libvirt_domain" "dynamic" {
   count  = var.number_vm
-  name   = "vm${count.index}"
+  name   = "${var.name_vm}${count.index}"
   memory = var.ram
   vcpu   = var.vcpu
   network_interface {
     network_name = "default"
+    hostname = "${var.name_vm}${count.index}"
     #permet d'attendre la couche réseau pour avoir les ips dans output :
     wait_for_lease= true
   }
@@ -70,5 +71,24 @@ resource "libvirt_domain" "dynamic" {
       private_key = tls_private_key.terrafrom_generated_private_key.private_key_openssh
       timeout = var.timeout_ssh
     }
+  }
+}
+## Génération du hostname des VM :
+resource "null_resource" "change_Name" {
+  depends_on = [
+    libvirt_domain.dynamic
+  ]
+  count = var.number_vm
+  connection {
+      host     = "${libvirt_domain.dynamic[count.index].network_interface.0.addresses[0]}"
+      type     = "ssh"
+      user     = "root"
+      private_key = tls_private_key.terrafrom_generated_private_key.private_key_openssh
+      timeout = var.timeout_ssh
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "hostnamectl hostname ${var.name_vm}${count.index}"
+    ]
   }
 }
