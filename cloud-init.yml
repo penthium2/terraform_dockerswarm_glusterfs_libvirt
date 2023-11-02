@@ -1,0 +1,30 @@
+#cloud-config
+packages:
+  - "bash-completion"
+  - "git"
+  - "curl"
+  - "firewalld"
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+runcmd:
+  #- firewall-cmd --set-default-zone=trusted
+  - loadkeys fr
+  - systemctl enable firewalld --now
+  - firewall-cmd --add-port=2376/tcp --permanent
+  - firewall-cmd --add-port=2377/tcp --permanent
+  - firewall-cmd --add-port=7946/tcp --permanent
+  - firewall-cmd --add-port=7946/udp --permanent
+  - firewall-cmd --add-port=4789/udp --permanent
+  - firewall-cmd --reload
+  - curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
+  - chmod u+x /tmp/get-docker.sh
+  - /tmp/get-docker.sh
+  - systemctl enable docker --now
+  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/authorized_keys
+  - echo "${root_sshkey} infra@bzhack.bzh" >> /root/.ssh/id_rsa.pub
+write_files:
+  - path: "/root/hello.txt"
+    owner: "root:root"
+    permissions: '0644'
+    content: "This Infrastructure is provided by BZHack! Enjoy!\n"

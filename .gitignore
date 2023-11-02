@@ -1,4 +1,9 @@
-/Fedora-Cloud-Base-38-1.6.x86_64.qcow2
 .terraforme*
 .terraform*
 /pool
+/private_key.pem
+/test
+terraform*
+prod.auto.tfvars
+terraform.tfstate
+terraform.tfstate.backup
