@@ -4,7 +4,7 @@ Ce projet est une maquette permetant l'installation automatique de X vm avec aut
 
 Il y a aussi un système de fichier distribué de type glusterFS pour la redondance des donné des conteneurs.
 
-Toute c'est infra est intallé dans X vm linux dans un KVM/Qemu via libvirt.
+Toute cette infra est intallé dans X vm linux dans un KVM/Qemu via libvirt.
 
 Et biensur tout est automatisé via terraform.
 
@@ -52,4 +52,3 @@ Ce terraform génère automatiquement un clef privée ssh pour se conecté au VM
 ## Destruction :
 
     terraform destroy
-    
