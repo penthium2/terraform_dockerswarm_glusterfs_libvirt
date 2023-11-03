@@ -4,9 +4,9 @@ packages:
   - "git"
   - "curl"
   - "firewalld"
-package_update: true
-package_upgrade: true
-package_reboot_if_required: true
+#package_update: true
+#package_upgrade: true
+#package_reboot_if_required: true
 runcmd:
   #- firewall-cmd --set-default-zone=trusted
   - loadkeys fr

@@ -1,6 +1,5 @@
 ###### Configuration de swarm :
 resource "swarm_cluster" "cluster" {
-  #depends_on              = [libvirt_domain.dynamic]
   depends_on              = [null_resource.change_Name]
   skip_manager_validation = true
   dynamic "nodes" {
