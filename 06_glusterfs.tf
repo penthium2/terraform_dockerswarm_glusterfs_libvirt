@@ -31,7 +31,7 @@ resource "null_resource" "glusterfs_master" {
       timeout = var.timeout_ssh
   }
   provisioner "remote-exec" {
-    script = count.index == 0 ? "${path.module}/script.sh/glusterfs_master.sh" : "echo nope"
+    script = count.index == 0 ? "${path.module}/script.sh/glusterfs_master.sh" : "${path.module}/script.sh/echonope.sh"
     
   }
   ## fait une action sur le premier serveur et un autre action sur tous les autres serveur
