@@ -73,7 +73,7 @@ resource "libvirt_domain" "dynamic" {
     }
   }
 }
-## Génération du hostname des VM :
+## Génération du hostname des VM : ressource utile for depend on [null_resource.change_Name]
 resource "null_resource" "change_Name" {
   depends_on = [
     libvirt_domain.dynamic
@@ -89,6 +89,25 @@ resource "null_resource" "change_Name" {
   provisioner "remote-exec" {
     inline = [
       "hostnamectl hostname ${var.name_vm}${count.index}"
+    ]
+  }
+}
+## génération fichier host sur tous les nodes :
+resource "null_resource" "host_file" {
+  depends_on = [
+    libvirt_domain.dynamic
+  ]
+  count = var.number_vm
+  connection {
+      host     = "${libvirt_domain.dynamic[count.index].network_interface.0.addresses[0]}"
+      type     = "ssh"
+      user     = "root"
+      private_key = tls_private_key.terrafrom_generated_private_key.private_key_openssh
+      timeout = var.timeout_ssh
+  }
+  provisioner "remote-exec" {
+    inline = [
+      for vm in libvirt_domain.dynamic : "echo ${vm.network_interface.0.addresses[0]} ${vm.network_interface.0.hostname} >> /etc/hosts"
     ]
   }
 }
