@@ -17,10 +17,23 @@ resource "null_resource" "glusterfs_install" {
   }
 }
 
+data "template_file" "master" {
+  template = file("${path.module}/script.sh/glusterfs_master.sh")
 
+  vars = {
+    VM = var.name_vm
+  }
+}
+resource "local_file" "rendered_script" {
+  content         = data.template_file.master.rendered
+  filename        = "${path.module}/scripts/rendered/master.sh"
+  file_permission = "700"
+
+}
 resource "null_resource" "glusterfs_master" {
   depends_on = [
-    null_resource.glusterfs_install
+    null_resource.glusterfs_install,
+    local_file.rendered_script
   ]
   count = var.number_vm
   connection {
@@ -31,7 +44,7 @@ resource "null_resource" "glusterfs_master" {
       timeout = var.timeout_ssh
   }
   provisioner "remote-exec" {
-    script = count.index == 0 ? "${path.module}/script.sh/glusterfs_master.sh" : "${path.module}/script.sh/echonope.sh"
+    script = count.index == 0 ? "${path.module}/scripts/rendered/master.sh" : "${path.module}/script.sh/echonope.sh"
     
   }
   ## fait une action sur le premier serveur et un autre action sur tous les autres serveur
