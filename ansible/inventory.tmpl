@@ -1,0 +1,15 @@
+---
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_user: root
+    ansible_ssh_private_key_file: ../private_key.pem
+    gluster_nodes:
+      %{ for ip in swarm_hosts}
+      - ${ip}%{endfor ~}
+    
+  children:
+    cluster:
+      hosts:
+        %{ for ip in swarm_hosts}
+        ${ip}:%{endfor ~}
