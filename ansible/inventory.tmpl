@@ -7,7 +7,8 @@ all:
     gluster_nodes:
       %{ for ip in swarm_hosts}
       - ${ip}%{endfor ~}
-    
+
+    replicas: ${replicas}
   children:
     cluster:
       hosts:
