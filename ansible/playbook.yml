@@ -3,21 +3,21 @@
   become: true
   tasks:
 
-    - name: Add directory bricks
+    - name: Add_directory_bricks
       file:
         dest: "/var/glusterfs/no-direct-write-here/docker/brick1"
         state: directory
-    - name: add directory mountpoint
+    - name: Add_directory_mountpoint
       file:
         dest: "/srv/docker_swarm"
         state: directory
 
 
-    - name: Install
+    - name: Install_gluster
       dnf:
         name: glusterfs-server
         state: present
-    - name: Activate
+    - name: Activate_gluster
       service:
         name: glusterd
         state: started
@@ -25,16 +25,17 @@
     - name: Firewall
       shell:
         cmd: "firewall-cmd --zone=public --add-service=glusterfs --permanent"
-    - name: Firewall
+    - name: Reload_firewall
       shell:
         cmd: "firewall-cmd --reload"
 
-    - name: Create a trusted storage pool
+    - name: Create_pool
       gluster.gluster.gluster_peer:
         state: present
         nodes: "{{ gluster_nodes }}"
       ignore_errors: true
-    - name: Tempo
+
+    - name: Tempo_5
       shell:
         cmd: "sleep 5"
     - name: Create gluster volume
@@ -42,18 +43,20 @@
         state: present
         name: docker
         bricks: /var/glusterfs/no-direct-write-here/docker/brick1
-        rebalance: true
+        # rebalance: true
+        replicas: "{{ replicas }}"
         cluster: "{{ gluster_nodes }}"
         force: true
       run_once: true
-    - name: Mount Point
+
+    - name: Mount_point
       mount:
         src: localhost:/docker
         path: /srv/docker_swarm
         fstype: glusterfs
         opts: defaults,_netdev,noauto,x-systemd.automount
         state: mounted
-    - name: Add autofs.d
+    - name: Add.autofs.d
       file:
         dest: "/etc/systemd/system/glusterfs.mount.d"
         state: directory
