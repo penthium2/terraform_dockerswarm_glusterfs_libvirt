@@ -18,7 +18,7 @@ resource "null_resource" "always_run" {
     timestamp = "${timestamp()}"
   }
 }
-resource "null_resource" "ansible_provisioner" {
+resource "null_resource" "glusterfs_provisioner" {
   depends_on = [
     local_file.hosts_cfg
   ]

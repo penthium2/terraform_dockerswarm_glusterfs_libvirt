@@ -15,6 +15,9 @@ resource "swarm_cluster" "cluster" {
     }
   }
   lifecycle {
-    prevent_destroy = false
+    replace_triggered_by = [
+      null_resource.always_run
+    ]
+    create_before_destroy = true
   }
 }
