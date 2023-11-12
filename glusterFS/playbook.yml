@@ -11,7 +11,7 @@
       file:
         dest: "/srv/docker_swarm"
         state: directory
-
+      ignore_errors: true
 
     - name: Install_gluster
       dnf:
@@ -34,10 +34,11 @@
         state: present
         nodes: "{{ gluster_nodes }}"
       ignore_errors: true
+      run_once: true
 
     - name: Tempo_5
       shell:
-        cmd: "sleep 5"
+        cmd: "sleep 10"
     - name: Create gluster volume
       gluster.gluster.gluster_volume:
         state: present
