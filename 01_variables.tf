@@ -43,3 +43,8 @@ variable "timeout_ssh" {
   description = "timeout max des tentative SSH"
   default     = "15m"
 }
+variable "portainer_adminpass" {
+  type        = string
+  description = "mot de passe admin de portainer"
+  default = "iopiopiopiop"
+}

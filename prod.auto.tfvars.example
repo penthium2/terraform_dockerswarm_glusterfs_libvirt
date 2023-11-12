@@ -7,4 +7,4 @@ ram     = 4096
 vcpu = 4
 size = 25032385536
 timeout_ssh = "15m"
-
+portainer_adminpass = "iopiopiopiop"

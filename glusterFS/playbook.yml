@@ -11,7 +11,7 @@
       file:
         dest: "/srv/docker_swarm"
         state: directory
-
+      ignore_errors: true
 
     - name: Install_gluster
       dnf:
