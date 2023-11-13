@@ -14,13 +14,6 @@ resource "swarm_cluster" "cluster" {
 
     }
   }
-  lifecycle {
-    replace_triggered_by = [
-      null_resource.always_run
-    ]
-    create_before_destroy = true
-    prevent_destroy = false
-  }
 }
 resource "null_resource" "firewall_docker" {
   depends_on = [swarm_cluster.cluster]
@@ -44,7 +37,6 @@ resource "null_resource" "firewall_docker" {
       null_resource.always_run
     ]
     create_before_destroy = true
-    prevent_destroy = false
   }
 }
 
