@@ -1,7 +1,7 @@
 ###Variables :
 variable "number_vm" {
   description = "Number of vm"
-  default     = 2
+  default     = 3
 }
 variable "path_pool" {
   type        = string
