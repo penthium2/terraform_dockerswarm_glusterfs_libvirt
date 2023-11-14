@@ -1,4 +1,7 @@
 resource "local_file" "hosts_cfg" {
+  depends_on = [
+    null_resource.host_file
+  ]
     content = templatefile("./glusterFS/inventory.tmpl",
         {
             swarm_hosts = libvirt_domain.dynamic[*].network_interface.0.addresses.0
