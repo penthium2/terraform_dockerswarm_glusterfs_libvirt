@@ -1,0 +1,19 @@
+---
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_user: root
+    ansible_ssh_private_key_file: ../private_key.pem
+    gluster_nodes:
+      
+      - 192.168.124.248
+      - 192.168.124.146
+      - 192.168.124.211
+    replicas: 3
+  children:
+    cluster:
+      hosts:
+        
+        192.168.124.248:
+        192.168.124.146:
+        192.168.124.211:
