@@ -110,4 +110,10 @@ resource "null_resource" "host_file" {
       for vm in libvirt_domain.dynamic : "echo ${vm.network_interface.0.addresses[0]} ${vm.network_interface.0.hostname} >> /etc/hosts"
     ]
   }
+  lifecycle {
+    replace_triggered_by = [
+        null_resource.always_run
+        ]
+    #create_before_destroy = true
+  }
 }
