@@ -49,6 +49,7 @@
         cluster: "{{ gluster_nodes }}"
         force: true
       run_once: true
+      ignore_errors: true
 
     - name: Mount_point
       mount:

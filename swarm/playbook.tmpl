@@ -1,0 +1,42 @@
+---
+- hosts : all
+  become: true
+  tasks:
+    - name: Install_python3-docker
+      dnf:
+        name: python3-docker
+        state: present
+    - name: Install_python3-jsondiff
+      dnf:
+        name: python3-jsondiff
+        state: present
+    - name: Init swarm on the first node
+      docker_swarm:
+        state: present
+      register: result
+      when: "ansible_default_ipv4.address == '${master}'"
+    - name: Add nodes
+      docker_swarm:
+        state: join
+        join_token: "{{ hostvars[groups['swarm_managers'][0]].result.swarm_facts.JoinTokens.Manager }}"
+        remote_addrs: "${master}"
+      when: "ansible_default_ipv4.address != '${master}'"
+    - name: Installez le package cronie
+      dnf:
+        name: cronie
+        state: present
+    - name: Copiez le script de tâche cron sur l'hôte
+      copy:
+        src: reset_node.sh
+        dest: /opt/reset_node.sh
+        mode: 0755
+    - name: Ajoutez la tâche cron pour exécuter toutes les minutes
+      cron:
+        name: "reset_node.sh toutes les minutes"
+        minute: "*"
+        job: "/opt/reset_node.sh"
+    - name: Activez le service cron
+      systemd:
+        name: crond
+        state: started
+        enabled: yes

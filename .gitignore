@@ -8,3 +8,4 @@ prod.auto.tfvars
 terraform.tfstate
 terraform.tfstate.backup
 /scripts/rendered
+.vscode

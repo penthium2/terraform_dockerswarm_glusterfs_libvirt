@@ -1,0 +1,66 @@
+---
+- hosts : all
+  become: true
+  tasks:
+    - name: Install_python3-docker
+      dnf:
+        name: python3-docker
+        state: present
+    - name: Install_python3-jsondiff
+      dnf:
+        name: python3-jsondiff
+        state: present
+    - name: Firewall docker
+      shell:
+        cmd: "firewall-cmd --zone=public --add-service=docker-swarm --permanent"
+    - name: Firewall reload
+      shell:
+        cmd: "firewall-cmd --reload"
+    - name: Activate_docker
+      service:
+        name: docker
+        state: restarted
+        enabled: true
+
+    - name: Init swarm on the first node
+      community.docker.docker_swarm:
+        state: present
+      register: result
+      when: "ansible_default_ipv4.address == '192.168.124.124'"
+    - name: debug
+      debug: msg="grrr var {{ hostvars[groups['swarm_managers'][0]].result.swarm_facts.JoinTokens.Manager }}"
+      when: "ansible_default_ipv4.address == '192.168.124.124'"
+    - name: Add nodes
+      community.docker.docker_swarm:
+        state: join
+        #advertise_addr: "192.168.124.124"
+        join_token: "{{ hostvars[groups['swarm_managers'][0]].result.swarm_facts.JoinTokens.Manager }}"
+        remote_addrs: "192.168.124.124"
+      when: "ansible_default_ipv4.address != '192.168.124.124'"
+
+
+#    - name: swarm_get_token
+#      shell:
+#        cmd: "docker swarm join-token manager | grep join > /srv/docker_swarm/configuration/token_manager"
+#      when: "ansible_default_ipv4.address == '192.168.124.124'"
+#      ignore_errors: true
+#
+#    - name: join_manager
+#      shell:
+#        cmd: "sh /srv/docker_swarm/configuration/token_manager ; echo ok"
+#      when: "ansible_default_ipv4.address != '192.168.124.124'"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
