@@ -9,14 +9,18 @@ resource "local_file" "hosts_portainer_cfg" {
     )
     filename = "./portainer/inventory.yml"
 }
-
+resource "random_password" "portainer_password" {
+  length           = 16
+  special          = true
+  override_special = "*-_=+>?"
+}
 resource "local_file" "playbook_portainer_cfg" {
       depends_on = [
     local_file.hosts_portainer_cfg
     ]
     content = templatefile("./portainer/playbook.tmpl",
         {
-            admin_password = "${var.portainer_adminpass}"
+            admin_password = "${random_password.portainer_password.result}"
             portainer_fqdn = "${var.portainer_fqdn}"
         }
     )
@@ -79,7 +83,7 @@ resource "local_file" "add_stack_cfg" {
     ]
     content = templatefile("./script.sh/add_stack.tmpl",
         {
-            admin_password = "${var.portainer_adminpass}"
+            admin_password = "${random_password.portainer_password.result}"
         }
     )
     filename = "./script.sh/add_stack.sh"

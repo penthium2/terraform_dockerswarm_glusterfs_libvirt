@@ -28,7 +28,7 @@
         cmd: "firewall-cmd --reload"
     - name: LOL passwor
       shell:
-        cmd: "echo -n ${admin_password} > /srv/docker_swarm/configuration/lol_password"
+        cmd: "echo -n '${admin_password}' > /srv/docker_swarm/configuration/lol_password"
 
 
 ############################## docker networks:
