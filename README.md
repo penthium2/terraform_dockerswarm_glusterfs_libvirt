@@ -14,19 +14,19 @@ La monté du nombre de node (vm) et sa réduction est prise en charge.
 
 Lien des projets :
 
-    terraform   : https://www.terraform.io/
+terraform   : https://www.terraform.io/
 
-    ansible     : https://www.ansible.com/
+ansible     : https://www.ansible.com/
 
-    docker      : https://www.docker.com/
+docker      : https://www.docker.com/
 
-    glusterFS   : https://www.gluster.org/
+glusterFS   : https://www.gluster.org/
 
-    portainer   : https://www.portainer.io/
+portainer   : https://www.portainer.io/
 
-    traefik     : https://traefik.io/
+traefik     : https://traefik.io/
 
-    ctfd        : https://ctfd.io/
+ctfd        : https://ctfd.io/
 
 ## fichier prod.auto.tfvars.example :
 
