@@ -43,8 +43,13 @@ variable "timeout_ssh" {
   description = "timeout max des tentative SSH"
   default     = "15m"
 }
-variable "portainer_adminpass" {
+variable "portainer_fqdn" {
   type        = string
-  description = "mot de passe admin de portainer"
-  default = "iopiopiopiop"
+  description = "fqdn de portainer"
+  default = "port.bzhack.pcp"
+}
+variable "ctfd_fqdn" {
+  type        = string
+  description = "fqdn de ctfd"
+  default = "port.bzhack.pcp"
 }

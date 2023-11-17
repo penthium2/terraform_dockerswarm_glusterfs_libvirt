@@ -1,0 +1,82 @@
+version: '3.7'
+
+services:
+  ctfd:
+    image: ctfd/ctfd:3.6.0
+    user: root
+    environment:
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=mysql+pymysql://ctfd:${sql}@db/ctfd
+      - REDIS_URL=redis://cache:6379
+      - SECRET_KEY=${key}
+      - WORKERS=30
+      - LOG_FOLDER=/var/log/CTFd
+      - ACCESS_LOG=-
+      - ERROR_LOG=-
+      - REVERSE_PROXY=true
+    volumes:
+      - /srv/docker_swarm/docker/ctfd/ctfd/logs:/var/log/CTFd
+      - /srv/docker_swarm/docker/ctfd/ctfd/uploads:/var/uploads
+    depends_on:
+      - db
+    networks:
+      - ctfd
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        delay: 15s
+        parallelism: 1
+        order: start-first
+        monitor: 10s
+        failure_action: rollback
+        max_failure_ratio: 0.55
+
+  nginx:
+    image: nginx:stable
+    volumes:
+      - /srv/docker_swarm/docker/ctfd//nginx/http.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - ctfd
+    networks:
+      - ctfd
+      - traefik
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        #définition du ciblage https vers le dock en 80
+        - "traefik.http.routers.ctfd.rule=Host(`${ctfd_fdqn}`)"
+        - "traefik.http.services.ctfd.loadbalancer.server.port=80"
+        - "traefik.http.routers.ctfd.service=ctfd"
+        - "traefik.http.routers.ctfd.entrypoints=web"
+
+  db:
+    image: mysql:8.1.0
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=${sql}
+      - MYSQL_USER=ctfd
+      - MYSQL_PASSWORD=${sql}
+      - MYSQL_DATABASE=ctfd
+    volumes:
+      - /srv/docker_swarm/docker/ctfd/mysql:/var/lib/mysql
+    networks:
+      - ctfd
+    # This command is required to set important mariadb defaults
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800 ]
+
+  cache:
+    image: redis:7.2
+    volumes:
+    - /srv/docker_swarm/docker/ctfd/redis:/data
+    networks:
+      - ctfd
+
+networks:
+    ctfd:
+      driver: overlay
+      external: false
+    traefik:
+      driver: overlay
+      external: true
