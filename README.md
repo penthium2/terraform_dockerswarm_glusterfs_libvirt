@@ -1,14 +1,16 @@
-# Docker Swarm avec GlusterFS via Terraform sur libvirt
+# Docker Swarm avec GlusterFS via Terraform sur libvirt avec portainer traefik et un petit CTFd
 
 Ce projet est une maquette permetant l'installation automatique de X vm avec automatiquement dockerswarm installé et initialisé avec que des nodes manager.
 
 Il y a aussi un système de fichier distribué de type glusterFS pour la redondance des donné des conteneurs.
 
-Ajout d'une installation automatique de portainer ()
+Ajout d'une installation automatique de portainer gérer par traefik et installation d'un CTFd.
 
 Toute cette infra est intallé dans X vm linux dans un KVM/Qemu via libvirt.
 
 Et biensur tout est automatisé via terraform.
+
+La monté du nombre de node (vm) et sa réduction est prise en charge.
 
 Lien des projets :
     terraform   : https://www.terraform.io/
