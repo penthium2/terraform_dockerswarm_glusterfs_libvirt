@@ -9,3 +9,4 @@ terraform.tfstate
 terraform.tfstate.backup
 /scripts/rendered
 .vscode
+/portainer/poartainerAPI_cmd

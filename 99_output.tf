@@ -5,6 +5,12 @@
    ]
   value = {
     IPs_du_cluster = libvirt_domain.dynamic[*].network_interface.0.addresses.0
-    portainer = "connectez vous ici : https://${libvirt_domain.dynamic.0.network_interface.0.addresses[0]}:9443\nlogin : admin\nmot de passe : ${var.portainer_adminpass}"
+    portainer = "Ajoutez si vous avez pas de dns : \n\t${libvirt_domain.dynamic.0.network_interface.0.addresses[0]} ${var.portainer_fqdn} dans votre fichier hosts.\nconnectez vous ici : http://${var.portainer_fqdn}\nlogin : admin\nmot de passe : ${var.portainer_adminpass}"
   }
+}
+output "ctfd_information" {
+  value = {
+   ctfd = "Ajoutez si vous avez pas de dns : \n\t${libvirt_domain.dynamic.0.network_interface.0.addresses[0]} ${var.ctfd_fqdn} dans votre fichier hosts.\nconnectez vous ici : http://${var.ctfd_fqdn}"
+  }
+
 }

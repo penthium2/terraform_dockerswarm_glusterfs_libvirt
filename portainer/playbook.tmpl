@@ -6,11 +6,11 @@
       file:
         dest: "/srv/docker_swarm/configuration/portainer"
         state: directory
+      run_once: true
     - name: Add_directory-compose
       file:
         dest: "/srv/docker_swarm/configuration/compose/portainer"
         state: directory
-#      ignore_errors: true
       run_once: true
     - name: Install_python3-docker
       dnf:
@@ -23,13 +23,7 @@
     - name: Firewall interface
       shell:
         cmd: "firewall-cmd --add-port=9443/tcp --permanent"
-    - name: Firewall agent
-      shell:
-        cmd: "firewall-cmd --add-port=9001/tcp --permanent"
-    - name: Firewall agent2
-      shell:
-        cmd: "firewall-cmd --add-port=9000/tcp --permanent"
-    - name: Reload_firewall
+    - name: Firewall reload
       shell:
         cmd: "firewall-cmd --reload"
     - name: LOL passwor
@@ -38,13 +32,7 @@
 
 
 ############################## docker networks:
-#    - name: Create agent network
-#      community.docker.docker_network:
-#        name: agent_network
-#        driver: overlay
-#        attachable: true
-#      ignore_errors: true
-#      run_once: true  
+
     - name: Create agent traefik
       community.docker.docker_network:
         name: traefik
@@ -58,7 +46,6 @@
         state: present
         name: portainer
         compose:
-          #- /srv/docker_swarm/configuration/compose/portainer/docker-compose.yml
           - version: '3.2'
             services:
               agent:
@@ -66,7 +53,6 @@
                 volumes:
                   - /var/run/docker.sock:/var/run/docker.sock
                   - /var/lib/docker/volumes:/var/lib/docker/volumes
-                  
                 networks:
                   - agent_network
                 deploy:
@@ -80,8 +66,7 @@
                 #Mdp : iopiopiopiop
                 ports:
                   - "9443:9443"
-                  - "9000:9000"
-                  - "8000:8000"
+                #  - "9000:9000"
                 volumes:
                   - /srv/docker_swarm/configuration/portainer/:/data
                   - /srv/docker_swarm/configuration/lol_password:/tmp/portainer_password
@@ -93,6 +78,14 @@
                   replicas: 1
                   placement:
                     constraints: [node.role == manager]
+                  labels:
+                  - "traefik.enable=true"
+                  - "traefik.docker.network=traefik"
+                  - "traefik.http.routers.portainer.entrypoints=web"
+                  - "traefik.http.routers.portainer.rule=Host(`${portainer_fqdn}`)"
+                  - "traefik.http.routers.portainer.service=portainer"
+                  - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+
             networks:
               agent_network:
                 driver: overlay

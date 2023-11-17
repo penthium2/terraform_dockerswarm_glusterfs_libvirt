@@ -8,3 +8,5 @@ vcpu = 4
 size = 25032385536
 timeout_ssh = "15m"
 portainer_adminpass = "iopiopiopiop"
+portainer_fqdn = "port.bzhack.pcp"
+ctfd_fqdn = "ctfd.bzach.pcp"

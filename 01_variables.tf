@@ -48,3 +48,13 @@ variable "portainer_adminpass" {
   description = "mot de passe admin de portainer"
   default = "iopiopiopiop"
 }
+variable "portainer_fqdn" {
+  type        = string
+  description = "fqdn de portainer"
+  default = "port.bzhack.pcp"
+}
+variable "ctfd_fqdn" {
+  type        = string
+  description = "fqdn de ctfd"
+  default = "port.bzhack.pcp"
+}

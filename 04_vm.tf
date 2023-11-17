@@ -114,6 +114,5 @@ resource "null_resource" "host_file" {
     replace_triggered_by = [
         null_resource.always_run
         ]
-    #create_before_destroy = true
   }
 }

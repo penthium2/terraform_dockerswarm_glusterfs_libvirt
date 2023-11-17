@@ -1,0 +1,5 @@
+#!/bin/bash
+name=$1
+compose_path=$2
+pass=${admin_password}
+curl  -k -X POST "https://127.0.0.1:9443/api/stacks/create/swarm/file"  -H "$(curl -s -k -X POST https://127.0.0.1:9443/api/auth --data '{"username":"admin","password":"'"$pass"'"}' | awk -F'"' '{print "Authorization: Bearer", $4}')"  -F "endpointId=1" -F "Name=$name"  -F "file=@$compose_path" -F "SwarmID=$(docker info | grep ClusterID | awk '{print $2}')"

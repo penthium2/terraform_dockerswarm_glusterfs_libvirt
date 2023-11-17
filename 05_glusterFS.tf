@@ -33,6 +33,6 @@ resource "null_resource" "glusterfs_provisioner" {
     replace_triggered_by = [
       null_resource.always_run
     ]
-    create_before_destroy = true
+    #create_before_destroy = true
   }
 }
